@@ -2,7 +2,7 @@
   <div id="app">
     <div class="header"></div>
     <div class="header1">
-      <img :src="'http://127.0.0.1:3000'+head_img" v-if="head_img" height="70" width="70" />
+      <img :src="$axios.defaults.baseURL+head_img" v-if="head_img" height="70" width="70" />
       <img src="../assets/logo.png" v-else height="70" width="70" />
       <div class="right">
         <div class="top">
@@ -57,9 +57,23 @@ export default {
           li_left: '设置',
           li_right: '',
           href: function () {
+            location.href = '#'
+          }
+        },
+        {
+          li_left: '退出登录',
+          li_right: '',
+          href: function () {
             localStorage.removeItem('token')
             localStorage.removeItem('userId')
             location.href = '#/login'
+          }
+        },
+        {
+          li_left: '首页',
+          li_right: '',
+          href: function () {
+            location.href = '#/home'
           }
         }
       ],
@@ -79,7 +93,7 @@ export default {
       //获取id
       let id = localStorage.getItem('userId')
       this.$axios({
-        url: 'http://127.0.0.1:3000/user/' + id,
+        url: '/user/' + id,
         method: 'get',
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token')
@@ -140,7 +154,7 @@ export default {
   background-color: rgb(24, 24, 24);
   width: 100%;
   height: 50px;
-  margin-top: 225px;
+  margin-top: 30px;
 }
 .header1 {
   width: 100%;
