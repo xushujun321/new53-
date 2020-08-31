@@ -52,31 +52,33 @@
       </div>
     </div>
     <div class="heng"></div>
-    <comment :list="data" @click="$router.push('/comment/'+list.id)"></comment>
-
-    <write :show="show" @focus="show1" @blur="show2"></write>
+    <comment :list="data" @click="$router.push('/comment/'+$route.params.id)"></comment>
+    <write @reload="reload"></write>
     <div class="bottom"></div>
   </div>
 </template>
 
 <script>
-//引进输入框
-import write from '../components/跟帖输入框的封装'
 //引进评论
 import comment from '../components/精彩跟帖进行封装'
+//引进输入框
+import write from '@/components/跟帖输入框的封装'
 export default {
   data() {
     return {
       list: {},
-      show: false,
       data: []
     }
   },
   components: {
-    write,
-    comment
+    comment,
+    write
   },
   methods: {
+    reload() {
+      //重新加载评论列表数据
+      this.get_comment(this.$route.params.id)
+    },
     // 评论列表
     // 接口类型:【GET】
     // 接口地址: /post_comment/:id
@@ -86,6 +88,7 @@ export default {
         url: '/post_comment/' + id
       })
         .then((res) => {
+          res.data.data.length = 3
           this.data = res.data.data
           console.log(this.data)
         })
@@ -146,12 +149,6 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-    },
-    show1() {
-      this.show = true
-    },
-    show2() {
-      this.show = false
     }
   },
   mounted() {
@@ -159,6 +156,7 @@ export default {
     this.get_comment(this.$route.params.id)
 
     console.log(this.$route.params.id)
+    this.id1 = this.$route.params.id
     // 文章详情
     // 接口类型:【GET】
     // 接口地址: /post/:id

@@ -5,10 +5,16 @@
         <div class="top2">
           {{num+1}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{getpost.user.nickname}}&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
           <span>2小时前</span>&nbsp;&nbsp;&nbsp;
-          <span>回复</span>
+          <span @click="huifu(getpost.id,getpost.user.nickname)">回复</span>
         </div>
         <div class="nr1" v-html="getpost.content"></div>
-        <xuanran :getpost="getpost.parent" v-if="getpost.parent" :num="num+1"></xuanran>
+        <xuanran
+          :getpost="getpost.parent"
+          v-if="getpost.parent"
+          :num="num+1"
+          :parent_id="getpost.id"
+          :name="getpost.user.nickname"
+        ></xuanran>
       </li>
     </ul>
     <!-- 自己的评论加上别人的回复 -->
@@ -16,20 +22,30 @@
 </template>
 
 <script>
+//引进公共传值
+import bus from '@/components/Bus'
 export default {
   name: 'xuanran',
   props: ['getpost'],
   data() {
     return {
-      num: 0
+      num: 0,
+      parent_id: '',
+      name: '',
+      show5: false
+    }
+  },
+  methods: {
+    huifu(id, name) {
+      this.parent_id = id
+      this.name = name
+      console.log(this.parent_id, this.name)
+      bus.$emit('click', {
+        parent_id: this.parent_id,
+        name: this.name
+      })
     }
   }
-  /* methods: {
-    shows() {
-      this.$emit('focus')
-      this.$refs.write.focus()
-    }
-  } */
 }
 </script>
 

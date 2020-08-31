@@ -8,7 +8,7 @@
     <!-- 自己的评论加上别人的回复 -->
     <div class="nohave" v-if="list.length>0">
       <!-- 有网友评价自己 -->
-      <div class="have" v-for="item in list" :key="item.id">
+      <div class="have" v-for="(item,index) in list" :key="index">
         <div class="one">
           <img
             :src="$axios.defaults.baseURL+item.user.head_img"
@@ -20,43 +20,50 @@
           <div class="right">
             <div class="top1">{{item.user.nickname}}</div>
             <div class="bottom1">2小时前</div>
-            <span class="quguan">回复</span>
+            <span class="quguan" @click="reply(item.id)">回复</span>
           </div>
         </div>
         <!-- 进行判断，是否存在二级 -->
         <div class="other" v-if="item.parent">
           <comment :getpost="item.parent"></comment>
         </div>
-
         <div class="nr1">{{item.content}}</div>
       </div>
       <div class="more">
-        <span @click="tiao">更多跟帖</span>
+        <span>更多跟帖</span>
       </div>
     </div>
-    <!-- 自己的评论加上别人的回复 -->
   </div>
 </template>
 
 <script>
 //引进跟帖
-import comment from '../components/回复的子组件'
+import comment from '@/components/回复的子组件'
+
+//引进公共传值
+import bus from '@/components/Bus'
 export default {
   components: {
     comment
   },
   props: ['list'],
   data() {
-    return {}
-  },
-  methods: {
-    tiao() {
-      this.$emit('click')
+    return {
+      show: false,
+      content: '',
+      name2: ''
     }
   },
-  mounted() {
-    console.log(this.list)
-  }
+  methods: {
+    //点击更多跟帖按钮
+    tiao() {
+      this.$emit('click')
+    },
+    reply(parent_id) {
+      bus.$emit('replay', parent_id)
+    }
+  },
+  created() {}
 }
 </script>
 
